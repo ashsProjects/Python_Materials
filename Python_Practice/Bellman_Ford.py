@@ -28,42 +28,19 @@ def bellman_ford_sdsp(graph, target):
 
     return distances, predecessors
 
-def bellman_ford_detect_negative_cycle(graph, source):
-    # Step 1: Initialize distances and predecessors
-    distances = {node: sys.maxsize for node in graph}
-    predecessors = {node: None for node in graph}
-    distances[source] = 0
-
-    # Step 2: Relax edges repeatedly
-    for _ in range(len(graph) - 1):
-        for node, edges in graph.items():
-            for neighbor, weight in edges.items():
-                if distances[node] + weight < distances[neighbor]:
-                    distances[neighbor] = distances[node] + weight
-                    predecessors[neighbor] = node
-
-    # Step 3: Check for negative weight cycles during an additional iteration
-    for _ in range(1):
-        for node, edges in graph.items():
-            for neighbor, weight in edges.items():
-                if distances[node] + weight < distances[neighbor]:
-                    raise ValueError("Graph contains a negative weight cycle")
-
-    return distances, predecessors
-
 # Example usage:
 if __name__ == "__main__":
     # Define the graph as an adjacency list
     graph = {
         'a': {'b': 3},
         'b': {'c': 2},
-        'c': {'a': -7},
+        'c': {'a': 7},
         'd': {'a': 7, 'f': 5},
         'e': {'c': 3, 'd':3, 'f':10},
-        'f': {'c': -8}
+        'f': {'c': 8}
     }
 
-    target_node = 'g'
+    target_node = 'f'
     distances, predecessors = bellman_ford_sdsp(graph, target_node)
 
     # Print the distances and predecessors
@@ -75,9 +52,4 @@ if __name__ == "__main__":
             node = predecessors[node]
         print(f"Shortest path: {' <- '.join(path)}")
 
-    try:
-        distances, predecessors = bellman_ford_detect_negative_cycle(graph, target_node)
-        print("No negative cycle detected.")
-    except ValueError as e:
-        print(e)
-        
+
