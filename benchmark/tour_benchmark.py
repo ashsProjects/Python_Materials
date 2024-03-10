@@ -28,6 +28,29 @@ def generate_test_file(num_tests=500, seed=None) -> None:
     file.write('\t]\n')
     file.write('}\n')
 
+def generate_distances(num=20, seed=None) -> None:
+    random.seed(seed)
+    file = open('distances.json', 'w')
+    file.write('{\n\t"places": [')
+    
+    for i in range(num):
+        latitude = random.randint(-90, 90)
+        longitude = random.randint(-180, 180)
+        
+        file.write('\n\t\t{\n')
+        file.write(f'\t\t\t"latitude": "{latitude}",\n')
+        file.write(f'\t\t\t"longitude": "{longitude}",\n')
+        file.write(f'\t\t\t"name": "{i}",\n')
+        file.write(f'\t\t\t"municipality": "{i}",\n')
+        file.write(f'\t\t\t"region": "{i}"\n')
+        if i == num - 1: 
+            file.write('\t\t}\n')
+            break
+        file.write('\t\t},\n')
+    
+    file.write('\t]\n')
+    file.write('}\n')
+
 def send_to_server(verbose=False, timeout=15) -> tuple[int, float]:
     # url = 'https://black-bottle.cs.colostate.edu:31412/api/tour'
     url = 'http://127.0.0.1:41312/api/tour'
@@ -100,7 +123,8 @@ def benchmark(iterations=1, intervals=50, max_tests=1000, max_seconds=1, verbose
     compute_average_function(results_mean[:, 0], results_mean[:, 1])
     
 if __name__ == '__main__':
-    generate_test_file(num_tests=1200)
+    # generate_test_file(num_tests=1200)
     # send_to_server(verbose=True)
     # benchmark(iterations=3, max_tests=2000, verbose=True) #sometimes gets stuck if app's terminal isn't opened
+    generate_distances(1000)
     
